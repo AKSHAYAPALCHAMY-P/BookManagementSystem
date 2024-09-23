@@ -5,19 +5,19 @@ namespace BookManagementSystem.Web.BookManagementSystem
 {
     public partial class Book : System.Web.UI.Page
     {
-        public  string ConnectionString = "data source=MS-NB0101; database=BookManagementSystem; User ID=Akshaya; Password=Akshaya;";
+        public string ConnectionString = "data source=MS-NB0101; database=BookManagementSystem; User ID=Akshaya; Password=Akshaya;";
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if(!IsPostBack)
             {
                 CreateTableIfNotExists();
+
                 if(Session["EditBookISBN"] != null)
                 {
                     int isbn = (int) Session["EditBookISBN"];
                     LoadBookDetails(isbn);
                 }
-                Session.Remove("EditBookISBN");
             }
         }
 
@@ -25,7 +25,13 @@ namespace BookManagementSystem.Web.BookManagementSystem
         {
             string createTableQuery = @"
                 IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='Books' AND xtype='U')
-                CREATE TABLE Books (Title VARCHAR(100), Author VARCHAR(100), ISBN INT PRIMARY KEY, Genre VARCHAR(100), PublicationYear INT)";
+                CREATE TABLE Books (
+                    Title VARCHAR(100), 
+                    Author VARCHAR(100), 
+                    ISBN INT PRIMARY KEY, 
+                    Genre VARCHAR(100), 
+                    PublicationYear INT
+                )";
 
             using(SqlConnection conn = new SqlConnection(ConnectionString))
             using(SqlCommand cmd = new SqlCommand(createTableQuery, conn))
@@ -42,23 +48,24 @@ namespace BookManagementSystem.Web.BookManagementSystem
                 using(SqlConnection conn = new SqlConnection(ConnectionString))
                 {
                     conn.Open();
-
-                  
                     int? originalISBN = Session["EditBookISBN"] as int?;
                     bool isUpdating = originalISBN != null;
 
-                   
-                    if(isUpdating && originalISBN != newIsbn)
+                  
+                    if(isUpdating && originalISBN != newIsbn && BookExists(conn, newIsbn))
                     {
-                        if(BookExists(conn, newIsbn))
-                        {
-                            Response.Write("<script>alert('A book with this new ISBN already exists. Please use a unique ISBN.');</script>");
-                            return;
-                        }
+                        Response.Write("<script>alert('A book with this new ISBN already exists. Please use a unique ISBN.');</script>");
+                        return;
                     }
 
-                    
-                    UpdateBook(conn, newIsbn, publicationYear, isUpdating ? originalISBN.Value : (int?) null);
+                    if(isUpdating)
+                    {
+                        UpdateBook(conn, newIsbn, publicationYear, originalISBN.Value);
+                    }
+                    else
+                    {
+                        InsertBook(conn, newIsbn, publicationYear);
+                    }
                 }
 
                 Response.Redirect("BookList.aspx");
@@ -69,43 +76,23 @@ namespace BookManagementSystem.Web.BookManagementSystem
             }
         }
 
-        private void UpdateBook(SqlConnection conn, int newIsbn, int publicationYear, int? originalISBN)
+        private void UpdateBook(SqlConnection conn, int newIsbn, int publicationYear, int originalISBN)
         {
-            
-                int newIsbn;
-                if(int.TryParse(ISBNHiddenField.Value, out newIsbn))
-                {
-                    using(SqlConnection Conn = new SqlConnection(ConnectionString))
-                    {
-                        conn.Open();
-                        string query = "UPDATE Books SET Title = @Title, Author = @Author, Genre = @Genre, PublicationYear = @PublicationYear WHERE ISBN = @ISBN";
+            string updateQuery = @"
+                UPDATE Books 
+                SET Title = @Title, Author = @Author, Genre = @Genre, PublicationYear = @PublicationYear 
+                WHERE ISBN = @ISBN";
 
-                        using(SqlCommand cmd = new SqlCommand(query, conn))
-                        {
-                            cmd.Parameters.AddWithValue("@Title", TitleInput.Text);
-                            cmd.Parameters.AddWithValue("@Author", AuthorInput.Text);
-                            cmd.Parameters.AddWithValue("@Genre", GenreInput.Text);
-                            cmd.Parameters.AddWithValue("@PublicationYear", Convert.ToInt32(YearInput.Text));
-                            cmd.Parameters.AddWithValue("@ISBN", newIsbn);
+            using(SqlCommand cmd = new SqlCommand(updateQuery, conn))
+            {
+                cmd.Parameters.AddWithValue("@Title", TitleInput.Text);
+                cmd.Parameters.AddWithValue("@Author", AuthorInput.Text);
+                cmd.Parameters.AddWithValue("@Genre", GenreInput.Text);
+                cmd.Parameters.AddWithValue("@PublicationYear", publicationYear);
+                cmd.Parameters.AddWithValue("@ISBN", originalISBN);
 
-                            try
-                            {
-                                cmd.ExecuteNonQuery();
-                                Response.Redirect("BookList.aspx");
-                            }
-                            catch(SqlException ex)
-                            {
-                                Response.Write("<script>alert('Error: " + ex.Message + "');</script>");
-                            }
-                        }
-                    }
-                
-                else
-                {
-                    Response.Write("<script>alert('Invalid ISBN.');</script>");
-                }
+                cmd.ExecuteNonQuery();
             }
-
         }
 
         private bool BookExists(SqlConnection conn, int isbn)
@@ -118,10 +105,12 @@ namespace BookManagementSystem.Web.BookManagementSystem
             }
         }
 
-
         private void InsertBook(SqlConnection conn, int isbn, int publicationYear)
         {
-            string insertQuery = "INSERT INTO Books (Title, Author, ISBN, Genre, PublicationYear) VALUES (@Title, @Author, @ISBN, @Genre, @PublicationYear)";
+            string insertQuery = @"
+                INSERT INTO Books (Title, Author, ISBN, Genre, PublicationYear) 
+                VALUES (@Title, @Author, @ISBN, @Genre, @PublicationYear)";
+
             using(SqlCommand cmd = new SqlCommand(insertQuery, conn))
             {
                 cmd.Parameters.AddWithValue("@Title", TitleInput.Text);
@@ -143,6 +132,7 @@ namespace BookManagementSystem.Web.BookManagementSystem
                 {
                     cmd.Parameters.AddWithValue("@ISBN", isbn);
                     conn.Open();
+
                     using(SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if(reader.Read())
