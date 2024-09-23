@@ -9,7 +9,7 @@
     <form id="form1" runat="server">
         <div>
             <asp:GridView ID="BookGrid" runat="server" AutoGenerateColumns="False" DataKeyNames="ISBN"
-                OnRowEditing="BookGrid_RowEditing" OnRowDeleting="BookGrid_RowDeleting" 
+                OnRowEditing="BookGrid_RowEditing" OnRowDeleting="BookGrid_RowDeleting"
                 OnRowUpdating="BookGrid_RowUpdating" OnRowCancelingEdit="BookGrid_RowCancelingEdit">
                 <Columns>
                     <asp:TemplateField HeaderText="Title">
@@ -20,7 +20,7 @@
                             <asp:TextBox ID="TitleTextBox" runat="server" Text='<%# Bind("Title") %>'></asp:TextBox>
                         </EditItemTemplate>
                     </asp:TemplateField>
-                    
+
                     <asp:TemplateField HeaderText="Author">
                         <ItemTemplate>
                             <asp:Label ID="AuthorLabel" runat="server" Text='<%# Bind("Author") %>'></asp:Label>

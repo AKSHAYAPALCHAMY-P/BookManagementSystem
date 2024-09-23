@@ -89,7 +89,7 @@ namespace BookManagementSystem.Web.BookManagementSystem
                 cmd.Parameters.AddWithValue("@Author", AuthorInput.Text);
                 cmd.Parameters.AddWithValue("@Genre", GenreInput.Text);
                 cmd.Parameters.AddWithValue("@PublicationYear", publicationYear);
-                cmd.Parameters.AddWithValue("@ISBN", originalISBN);
+                cmd.Parameters.AddWithValue("@ISBN", newIsbn);
 
                 cmd.ExecuteNonQuery();
             }
