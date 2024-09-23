@@ -123,12 +123,12 @@ namespace BookManagementSystem.Web.BookManagementSystem
         protected global::System.Web.UI.WebControls.Button SubmitButton;
 
         /// <summary>
-        /// EditBookIndex control.
+        /// ISBNHiddenField control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField EditBookIndex;
+        protected global::System.Web.UI.WebControls.HiddenField ISBNHiddenField;
     }
 }

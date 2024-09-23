@@ -8,15 +8,9 @@
 <body>
     <form id="form1" runat="server">
         <div>
-            <h2>Book List</h2>
-             <asp:GridView ID="BookGrid" runat="server" AutoGenerateColumns="False"
-                DataKeyNames="ISBN"
-                OnRowEditing="BookGrid_RowEditing"
-                OnRowUpdating="BookGrid_RowUpdating"
-                OnRowCancelingEdit="BookGrid_RowCancelingEdit"
-                OnRowDeleting="BookGrid_RowDeleting"
-                CssClass="grid-view">
-                
+            <asp:GridView ID="BookGrid" runat="server" AutoGenerateColumns="False" DataKeyNames="ISBN"
+                OnRowEditing="BookGrid_RowEditing" OnRowDeleting="BookGrid_RowDeleting" 
+                OnRowUpdating="BookGrid_RowUpdating" OnRowCancelingEdit="BookGrid_RowCancelingEdit">
                 <Columns>
                     <asp:TemplateField HeaderText="Title">
                         <ItemTemplate>
@@ -26,7 +20,7 @@
                             <asp:TextBox ID="TitleTextBox" runat="server" Text='<%# Bind("Title") %>'></asp:TextBox>
                         </EditItemTemplate>
                     </asp:TemplateField>
-
+                    
                     <asp:TemplateField HeaderText="Author">
                         <ItemTemplate>
                             <asp:Label ID="AuthorLabel" runat="server" Text='<%# Bind("Author") %>'></asp:Label>
@@ -40,6 +34,9 @@
                         <ItemTemplate>
                             <asp:Label ID="ISBNLabel" runat="server" Text='<%# Bind("ISBN") %>'></asp:Label>
                         </ItemTemplate>
+                        <EditItemTemplate>
+                            <asp:TextBox ID="ISBNTextBox" runat="server" Text='<%# Bind("ISBN") %>'></asp:TextBox>
+                        </EditItemTemplate>
                     </asp:TemplateField>
 
                     <asp:TemplateField HeaderText="Genre">
@@ -60,17 +57,7 @@
                         </EditItemTemplate>
                     </asp:TemplateField>
 
-                    <asp:TemplateField>
-                        <ItemTemplate>
-                            <asp:Button ID="EditButton" runat="server" CommandName="Edit" Text="Edit" />
-                            <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" CommandArgument='<%# Eval("ISBN") %>' Text="Delete" OnClientClick="return confirm('Are you sure you want to delete this book?');" />
-                        </ItemTemplate>
-                        <EditItemTemplate>
-                            <asp:Button ID="UpdateButton" runat="server" CommandName="Update" Text="Update" />
-                            <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" Text="Cancel" />
-                        </EditItemTemplate>
-                    </asp:TemplateField>
-
+                    <asp:CommandField ShowEditButton="True" ShowDeleteButton="True" />
                 </Columns>
             </asp:GridView>
         </div>
