@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BookManagementSystem.Web.BookManagementSystem
+namespace BookManagementSystem.Web
 {
 
 
