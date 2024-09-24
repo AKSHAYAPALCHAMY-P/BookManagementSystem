@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
-namespace BookManagementSystem.Web.BookManagementSystem
+namespace BookManagementSystem.Web
 {
     public partial class Book : System.Web.UI.Page
     {
@@ -78,18 +79,19 @@ namespace BookManagementSystem.Web.BookManagementSystem
 
         private void UpdateBook(SqlConnection conn, int newIsbn, int publicationYear, int originalISBN)
         {
-            string updateQuery = @"
-                UPDATE Books 
-                SET Title = @Title, Author = @Author, Genre = @Genre, PublicationYear = @PublicationYear 
-                WHERE ISBN = @ISBN";
+            string updateQuery =  @"
+                                    UPDATE Books
+                                    SET Title = @Title, Author = @Author, Genre = @Genre, PublicationYear = @PublicationYear, ISBN = @NewISBN
+                                    WHERE ISBN = @OriginalISBN";
 
-            using(SqlCommand cmd = new SqlCommand(updateQuery, conn))
+            using (SqlCommand cmd = new SqlCommand(updateQuery, conn))
             {
                 cmd.Parameters.AddWithValue("@Title", TitleInput.Text);
                 cmd.Parameters.AddWithValue("@Author", AuthorInput.Text);
                 cmd.Parameters.AddWithValue("@Genre", GenreInput.Text);
                 cmd.Parameters.AddWithValue("@PublicationYear", publicationYear);
-                cmd.Parameters.AddWithValue("@ISBN", newIsbn);
+                cmd.Parameters.AddWithValue("@NewISBN", newIsbn);
+                cmd.Parameters.AddWithValue("@OriginalISBN", originalISBN);
 
                 cmd.ExecuteNonQuery();
             }
@@ -141,7 +143,11 @@ namespace BookManagementSystem.Web.BookManagementSystem
                             AuthorInput.Text = reader["Author"].ToString();
                             GenreInput.Text = reader["Genre"].ToString();
                             YearInput.Text = reader["PublicationYear"].ToString();
-                            ISBNHiddenField.Value = reader["ISBN"].ToString();
+
+                            if (reader["ISBN"] != DBNull.Value)
+                            {
+                                ISBNHiddenField.Value = reader["ISBN"].ToString();
+                            }
                         }
                     }
                 }
