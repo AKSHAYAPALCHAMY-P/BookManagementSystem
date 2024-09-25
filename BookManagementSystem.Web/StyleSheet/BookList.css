@@ -1,16 +1,19 @@
-﻿*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-
 
 body {
     font-family: Arial, sans-serif;
-    background;
     color: #333;
     margin: 0;
     padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
     body::before {
@@ -20,7 +23,7 @@ body {
         left: 0;
         right: 0;
         bottom: 0;
-        background: url("Images/ModernLibrary.jpg") no-repeat center center;
+        background: url("Images/ModernLibrary.jpg") no-repeat center center fixed;
         background-size: cover;
         z-index: -1;
         filter: brightness(0.5);
@@ -33,7 +36,17 @@ form {
     background-color: rgba(255, 255, 255, 0.15);
     border-radius: 10px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+h1 {
+    text-align: center;
+    font-size: 40px;
+    color: #ffdd57;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 2s ease-in-out, floating 5s ease-in-out infinite;
 }
 
 table {
@@ -46,11 +59,13 @@ th, td {
     padding: 12px 15px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     text-align: left;
+    transition: background-color 0.3s ease;
 }
 
 th {
     background-color: #333;
     color: #fff;
+    background: linear-gradient(45deg, #ff7e5f, #feb47b, #ff6f61);
 }
 
 tr:nth-child(even) {
@@ -58,7 +73,9 @@ tr:nth-child(even) {
 }
 
 tr:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 123, 255, 0.1);
+    transform: scale(1.02);
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 input[type="text"] {
@@ -92,27 +109,64 @@ button, .asp-button {
     }
 
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
 
-button {
-    background-color: #007BFF;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-    button:hover {
+
+@keyframes floating {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+
+button, .asp-button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+    button:hover, .asp-button:hover {
         background-color: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
     }
 
 
-    button[commandname="Delete"] {
-        background-color: #DC3545;
+    button:active, .asp-button:active {
+        background-color: #004099;
+        transform: translateY(1px);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
     }
 
-        button[commandname="Delete"]:hover {
-            background-color: #C82333;
-        }
+
+    button:disabled, .asp-button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+

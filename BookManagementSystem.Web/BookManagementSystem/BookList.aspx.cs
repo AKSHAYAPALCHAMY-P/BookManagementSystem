@@ -34,7 +34,7 @@ namespace BookManagementSystem.Web
         }
 
         protected void BookGrid_RowEditing(object sender, GridViewEditEventArgs e)
-        {
+         {
             int isbn = (int) BookGrid.DataKeys[e.NewEditIndex].Value;
             Session["EditBookISBN"] = isbn;
             Response.Redirect("Book.aspx");
@@ -97,6 +97,11 @@ namespace BookManagementSystem.Web
                     cmd.ExecuteNonQuery();
                 }
             }
+        }
+
+        protected void Back_Button(object sender, EventArgs e)
+        {
+            Response.Redirect("Book.aspx");
         }
     }
 }
