@@ -5,7 +5,7 @@
     <link href="StyleSheet/Main.css" rel="stylesheet"/>
 
     <div>
-        <h1>"Books: because reality is overrated. Welcome to the alternate universe!"  </h1>
+        <h1>புத்தக வழிகாட்டி</h1>
     </div>
 
 </asp:Content>
