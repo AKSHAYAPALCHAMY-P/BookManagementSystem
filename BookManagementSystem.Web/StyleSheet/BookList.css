@@ -90,3 +90,29 @@ button, .asp-button {
     button:hover, .asp-button:hover {
         background-color: #0056b3;
     }
+
+
+
+button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+
+    button[commandname="Delete"] {
+        background-color: #DC3545;
+    }
+
+        button[commandname="Delete"]:hover {
+            background-color: #C82333;
+        }

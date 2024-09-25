@@ -144,7 +144,7 @@ namespace BookManagementSystem.Web
                             GenreInput.Text = reader["Genre"].ToString();
                             YearInput.Text = reader["PublicationYear"].ToString();
 
-                            if (reader["ISBN"] != DBNull.Value)
+                            if (reader["ISBN"] != DBNull.Value) //Non Existence value
                             {
                                 ISBNHiddenField.Value = reader["ISBN"].ToString();
                             }
