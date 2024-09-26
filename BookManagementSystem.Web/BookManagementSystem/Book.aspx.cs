@@ -44,23 +44,29 @@ namespace BookManagementSystem.Web
 
         protected void AddOrUpdateBookButton_Click(object sender, EventArgs e)
         {
-            if(int.TryParse(ISBNInput.Text, out int newIsbn) && int.TryParse(YearInput.Text, out int publicationYear))
+            if (int.TryParse(ISBNInput.Text, out int newIsbn) && int.TryParse(YearInput.Text, out int publicationYear))
             {
-                using(SqlConnection conn = new SqlConnection(ConnectionString))
+                using (SqlConnection conn = new SqlConnection(ConnectionString))
                 {
                     conn.Open();
+
                     int? originalISBN = Session["EditBookISBN"] as int?;
                     bool isUpdating = originalISBN != null;
 
-                  
-                    if(isUpdating && originalISBN != newIsbn && BookExists(conn, newIsbn))
+                    if (!isUpdating && BookExists(conn, newIsbn))
                     {
-                        Response.Write("<script>alert('A book with this new ISBN already exists. Please use a unique ISBN.');</script>");
+                        Response.Write("<script>alert('A book with this ISBN already exists. Please use a unique ISBN.');</script>");
                         return;
                     }
 
-                    if(isUpdating)
+                    if (isUpdating)
                     {
+                        if (originalISBN != newIsbn && BookExists(conn, newIsbn))
+                        {
+                            Response.Write("<script>alert('A book with this new ISBN already exists. Please use a unique ISBN.');</script>");
+                            return;
+                        }
+
                         UpdateBook(conn, newIsbn, publicationYear, originalISBN.Value);
                     }
                     else
@@ -68,7 +74,6 @@ namespace BookManagementSystem.Web
                         InsertBook(conn, newIsbn, publicationYear);
                     }
                 }
-
                 Response.Redirect("BookList.aspx");
             }
             else
@@ -76,6 +81,7 @@ namespace BookManagementSystem.Web
                 Response.Write("<script>alert('Please enter valid numeric values for ISBN and Publication Year.');</script>");
             }
         }
+
 
         private void UpdateBook(SqlConnection conn, int newIsbn, int publicationYear, int originalISBN)
         {
