@@ -13,11 +13,11 @@ namespace BookManagementSystem.Web
         {
             if(!IsPostBack)
             {
-                BindBookGrid();
+                DataBookGrid();
             }
         }
 
-        private void BindBookGrid()
+        private void DataBookGrid()
         {
             using(SqlConnection conn = new SqlConnection(ConnectionString))
             {
@@ -51,7 +51,7 @@ namespace BookManagementSystem.Web
             UpdateBook(isbn, title, author, genre, publicationYear);
 
             BookGrid.EditIndex = -1;
-            BindBookGrid();
+            DataBookGrid();
         }
 
         private void UpdateBook(int isbn, string title, string author, string genre, int publicationYear)
@@ -77,13 +77,13 @@ namespace BookManagementSystem.Web
         {
             int isbn = (int) BookGrid.DataKeys[e.RowIndex].Value;
             DeleteBook(isbn);
-            BindBookGrid();
+            DataBookGrid();
         }
 
         protected void BookGrid_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             BookGrid.EditIndex = -1;
-            BindBookGrid();
+            DataBookGrid();
         }
         protected void DeleteBook(int isbn)
         {

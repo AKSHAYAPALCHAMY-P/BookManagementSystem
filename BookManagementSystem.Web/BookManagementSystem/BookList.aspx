@@ -60,7 +60,7 @@
 
                     <asp:CommandField ShowEditButton="True" ShowDeleteButton="True" />
                 </Columns>
-            </asp:GridView>
+            </asp:GridView><br>
 
             <asp:Button ID="Back" runat="server" Text="Back" OnClick="Back_Button"/>
         </div>
