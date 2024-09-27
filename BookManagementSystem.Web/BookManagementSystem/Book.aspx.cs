@@ -24,7 +24,7 @@ namespace BookManagementSystem.Web
 
         protected void CreateTableIfNotExists()
         {
-            string createTableQuery = @"
+            string CreateTableQuery = @"
                 IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='Books' AND xtype='U')
                 CREATE TABLE Books (
                     Title VARCHAR(100), 
@@ -34,12 +34,14 @@ namespace BookManagementSystem.Web
                     PublicationYear INT
                 )";
 
-            using(SqlConnection conn = new SqlConnection(ConnectionString))
-            using(SqlCommand cmd = new SqlCommand(createTableQuery, conn)) //creates a new command that uses the connection automatically                                                                           //it has dispose methods or else we should be initialize
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
+                SqlCommand cmd = new SqlCommand(CreateTableQuery, conn);//creates a new command that uses the connection automatically                                                                           //it has dispose methods or else we should be initialize
+
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
+            
         }
 
         protected void AddOrUpdateBookButton_Click(object sender, EventArgs e)
