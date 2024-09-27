@@ -11,7 +11,7 @@
         <div>
             <asp:GridView ID="BookGrid" runat="server" AutoGenerateColumns="False" DataKeyNames="ISBN"
                 OnRowEditing="BookGrid_RowEditing" OnRowDeleting="BookGrid_RowDeleting"
-                OnRowUpdating="BookGrid_RowUpdating" OnRowCancelingEdit="BookGrid_RowCancelingEdit">
+                 OnRowCancelingEdit="BookGrid_RowCancelingEdit">
                 <Columns>
                     <asp:TemplateField HeaderText="Title">
                         <ItemTemplate>
