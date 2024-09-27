@@ -35,7 +35,7 @@ namespace BookManagementSystem.Web
                 )";
 
             using(SqlConnection conn = new SqlConnection(ConnectionString))
-            using(SqlCommand cmd = new SqlCommand(createTableQuery, conn))
+            using(SqlCommand cmd = new SqlCommand(createTableQuery, conn)) //creates a new command that uses the connection automatically                                                                           //it has dispose methods or else we should be initialize
             {
                 conn.Open();
                 cmd.ExecuteNonQuery();
@@ -90,8 +90,8 @@ namespace BookManagementSystem.Web
                                     SET Title = @Title, Author = @Author, Genre = @Genre, PublicationYear = @PublicationYear, ISBN = @NewISBN
                                     WHERE ISBN = @OriginalISBN";
 
-            using (SqlCommand cmd = new SqlCommand(updateQuery, conn))
-            {
+            SqlCommand cmd = new SqlCommand(updateQuery, conn);
+            
                 cmd.Parameters.AddWithValue("@Title", TitleInput.Text);
                 cmd.Parameters.AddWithValue("@Author", AuthorInput.Text);
                 cmd.Parameters.AddWithValue("@Genre", GenreInput.Text);
@@ -100,17 +100,17 @@ namespace BookManagementSystem.Web
                 cmd.Parameters.AddWithValue("@OriginalISBN", originalISBN);
 
                 cmd.ExecuteNonQuery();
-            }
+            
         }
 
         private bool BookExists(SqlConnection conn, int isbn)
         {
             string query = "SELECT COUNT(*) FROM Books WHERE ISBN = @ISBN";
-            using(SqlCommand cmd = new SqlCommand(query, conn))
-            {
+            SqlCommand cmd = new SqlCommand(query, conn);
+            
                 cmd.Parameters.AddWithValue("@ISBN", isbn);
                 return (int) cmd.ExecuteScalar() > 0;
-            }
+            
         }
 
         private void InsertBook(SqlConnection conn, int isbn, int publicationYear)
@@ -119,8 +119,8 @@ namespace BookManagementSystem.Web
                 INSERT INTO Books (Title, Author, ISBN, Genre, PublicationYear) 
                 VALUES (@Title, @Author, @ISBN, @Genre, @PublicationYear)";
 
-            using(SqlCommand cmd = new SqlCommand(insertQuery, conn))
-            {
+            SqlCommand cmd = new SqlCommand(insertQuery, conn);
+            
                 cmd.Parameters.AddWithValue("@Title", TitleInput.Text);
                 cmd.Parameters.AddWithValue("@Author", AuthorInput.Text);
                 cmd.Parameters.AddWithValue("@ISBN", isbn);
@@ -128,7 +128,7 @@ namespace BookManagementSystem.Web
                 cmd.Parameters.AddWithValue("@PublicationYear", publicationYear);
 
                 cmd.ExecuteNonQuery();
-            }
+            
         }
 
         private void LoadBookDetails(int isbn)
@@ -136,27 +136,28 @@ namespace BookManagementSystem.Web
             using(SqlConnection conn = new SqlConnection(ConnectionString))
             {
                 string query = "SELECT * FROM Books WHERE ISBN = @ISBN";
-                using(SqlCommand cmd = new SqlCommand(query, conn))
-                {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                
                     cmd.Parameters.AddWithValue("@ISBN", isbn);
                     conn.Open();
 
-                    using(SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if(reader.Read())
+                SqlDataReader reader = cmd.ExecuteReader();
+                    
+                        if(reader.Read())   //method reads the first row returned by the query, moving the reader to the next row if available
                         {
-                            TitleInput.Text = reader["Title"].ToString();
+                            TitleInput.Text = reader["Title"].ToString();//retrives from the db and assigns in input field
                             AuthorInput.Text = reader["Author"].ToString();
                             GenreInput.Text = reader["Genre"].ToString();
                             YearInput.Text = reader["PublicationYear"].ToString();
+                            ISBNInput.Text = reader["ISBN"].ToString();
 
                             if (reader["ISBN"] != DBNull.Value) //Non Existence value
                             {
                                 ISBNHiddenField.Value = reader["ISBN"].ToString();
                             }
                         }
-                    }
-                }
+                    
+                
             }
         }
     }
