@@ -53,17 +53,18 @@ namespace BookManagementSystem.Web
                     conn.Open();
 
                     int? originalISBN = Session["EditBookISBN"] as int?;
-                    bool isUpdating = originalISBN != null;
+                    bool isUpdating = originalISBN != null;//both are not null
 
                     if (!isUpdating && BookExists(conn, newIsbn))
                     {
                         Response.Write("<script>alert('A book with this ISBN already exists. Please use a unique ISBN.');</script>");
+                        ISBNInput.Text = "";
                         return;
                     }
 
                     if (isUpdating)
                     {
-                        if (originalISBN != newIsbn && BookExists(conn, newIsbn))
+                        if (isUpdating && originalISBN != newIsbn && BookExists(conn, newIsbn))
                         {
                             Response.Write("<script>alert('A book with this new ISBN already exists. Please use a unique ISBN.');</script>");
                             return;
